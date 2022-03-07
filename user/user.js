@@ -25,12 +25,6 @@ router.post("/daftar", validasi_data.daftar, verfikasi_validasi_data, async (req
             message: "Telepon sudah ada"
         });
 
-        const isUsername = await database("user").where('username', data.username);
-        if (isUsername) return res.status(400).json({
-            status: 0,
-            message: "Username sudah ada"
-        });
-
         const createUser = {
             ...data,
             password: bcrypt.hashSync(data.password, 12)
@@ -105,7 +99,7 @@ router.post("/login", validasi_data.login, verfikasi_validasi_data, async (req, 
         } else {
             return res.status(400).json({
                 status: 0,
-                message: "Username tidak ditemukan",
+                message: "Email tidak ditemukan",
             });
         }
 
@@ -116,6 +110,7 @@ router.post("/login", validasi_data.login, verfikasi_validasi_data, async (req, 
         });
     }
 });
+
 router.post("/verfikasi/email",validasi_data.email,verfikasi_validasi_data, async (req, res, next) => {
     const data = req.body;
     const ramdom = Math.floor(Math.random() * (99999 - 10000 + 1) + 10000);
