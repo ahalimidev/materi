@@ -7,7 +7,7 @@ const express = require("express");
 const router = express.Router();
 
 
-router.get('/all/:id_kategori', async (req, res, next) => {
+router.get('/all/:id_kategori',verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("sub_kategori").where('id_kategori',req.params.id_kategori);
         return res.status(200).json({
@@ -23,7 +23,7 @@ router.get('/all/:id_kategori', async (req, res, next) => {
     }
 });
 
-router.get('/:id_sub_kategori', async (req, res, next) => {
+router.get('/:id_sub_kategori',verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("sub_kategori").where('id_sub_kategori', req.params.id_sub_kategori).first();
         return res.status(200).json({
@@ -39,7 +39,7 @@ router.get('/:id_sub_kategori', async (req, res, next) => {
     }
 });
 
-router.post('/simpan', multer.upload.single("foto"), async (req, res, next) => {
+router.post('/simpan',verfikasi_token, multer.upload.single("foto"), async (req, res, next) => {
     try {
         if (!req.file) {
             res.status(422).json({
@@ -72,14 +72,26 @@ router.post('/simpan', multer.upload.single("foto"), async (req, res, next) => {
 
 });
 
-router.post('/edit', multer.upload.single("foto"), async (req, res, next) => {
+router.post('/edit',verfikasi_token, multer.upload.single("foto"), async (req, res, next) => {
     try {
         const result = await database.select("*").from("sub_kategori").where('id_sub_kategori', req.params.id_sub_kategori).first();
         if (result) {
             if (!req.file) {
-                res.status(422).json({
-                    status: 0,
-                    message: "File Kosong"
+                const data = {
+                    id_kategori: req.body.id_kategori,
+                    nama: req.body.nama,
+                    foto: req.file.filename,
+                    status: req.body.status
+                };
+    
+                await database.from("sub_kategori").update(data).where('id_sub_kategori', req.body.id_sub_kategori);
+                return res.status(200).json({
+                    status: 1,
+                    message: "Berhasil",
+                    result: {
+                        id_sub_kategori: req.body.id_sub_kategori,
+                        ...data
+                    }
                 });
             }
             const data = {
@@ -126,7 +138,7 @@ router.post('/edit', multer.upload.single("foto"), async (req, res, next) => {
     }
 });
 
-router.delete('/delete/:id_sub_kategori', async (req, res, next) => {
+router.delete('/delete/:id_sub_kategori',verfikasi_token, async (req, res, next) => {
     try {
         const update = await database("sub_kategori").update('status',"N").where('id_sub_kategori', req.params.id_sub_kategori);
         if (update) {

@@ -17,6 +17,7 @@ app.use("/api/",require("./router/index"));
 
 app.use('/file/kategori', express.static(path.join(__dirname, './kategori/foto')));
 app.use('/file/kategori/sub', express.static(path.join(__dirname, './sub_kategori/foto')));
+app.use('/file/kategori/sub/produk', express.static(path.join(__dirname, './produk/foto')));
 
 app.use((req, res, next) => {
     const error = new Error("Not found");

@@ -76,9 +76,19 @@ router.post('/edit',verfikasi_token, multer.upload.single("foto"), async (req, r
         const result = await database("kategori").select("*").where('id_kategori', req.body.id_kategori).first();
         if (result) {
             if (!req.file) {
-                res.status(422).json({
-                    status: 0,
-                    message: "File Kosong"
+                const data = {
+                    nama: req.body.nama,
+                    status: req.body.status
+                };
+    
+                await database.from("kategori").update(data).where('id_kategori', req.body.id_kategori);
+                return res.status(200).json({
+                    status: 1,
+                    message: "Berhasil",
+                    result: {
+                        id_kategori: req.body.id_kategori,
+                        ...data
+                    }
                 });
             }
             const data = {

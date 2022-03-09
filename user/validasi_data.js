@@ -7,10 +7,6 @@ module.exports.daftar = [
     body('nama')
         .isString().withMessage('nama harus berupa string')
         .exists().withMessage('nama harus ada'),
-    body('warga_negara')
-        .isString().withMessage('warga_negara harus berupa string')
-        .exists().withMessage('warga_negara harus ada')
-        .isIn(['WNI', 'WNA']).withMessage('pilih salah satu WNI atau WNA'),
     body('id_provinsi')
         .isNumeric().withMessage('id_provinsi harus berupa nomor')
         .exists().withMessage('id_provinsi harus ada'),
