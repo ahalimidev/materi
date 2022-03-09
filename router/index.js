@@ -10,5 +10,6 @@ router.use("/produk/",require("../produk/produk"));
 router.use("/produk/foto/",require("../produk/foto_produk"));
 router.use("/keranjang/",require("../keranjang/keranjang"));
 router.use("/rajaongkir/",require("../rajaongkir/rajaongkir"));
+router.use("/transaksi/",require("../transaksi/transaksi"));
 
 module.exports = router;

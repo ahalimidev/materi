@@ -81,7 +81,7 @@ router.post('/upload/edit',verfikasi_token, multer.upload.single("foto"), async 
 
 router.delete('/upload/delete/:id_foto_produk',verfikasi_token, async (req, res, next) => {
     try {
-        const result = await database.select("*").from("foto_produk").where('id_foto_produk', req.params.foto_produk).first();
+        const result = await database.select("*").from("foto_produk").where('id_foto_produk', req.params.id_foto_produk).first();
         if (result) {
             await database.from("foto_produk").where('id_foto_produk', req.body.id_foto_produk).delete();
             fs.unlink(path.join(__dirname + '/foto/') + result.foto, (err) => {

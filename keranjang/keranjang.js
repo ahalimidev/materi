@@ -1,10 +1,12 @@
 const database = require("../config/database");
+const validasi_data = require("./validasi_data");
+const verfikasi_validasi_data = require("../middleware/verfikasi_validasi_data");
 const verfikasi_token = require("../middleware/auth");
 const moment = require('moment');
 const express = require("express");
 const router = express.Router();
 
-router.get("/all/:id_user", async (req, res, next) => {
+router.get("/all/:id_user",verfikasi_token, async (req, res, next) => {
     try {
         const result = await database("keranjang")
         .leftOuterJoin("produk","produk.id_produk",'keranjang.id_produk')
@@ -36,7 +38,7 @@ router.get("/all/:id_user", async (req, res, next) => {
 
 });
 
-router.post("/tambah", async (req, res, next) => {
+router.post("/tambah", verfikasi_token, async (req, res, next) => {
     const data = req.body;
     try {
         const simpan = await database('keranjang').insert(data);
@@ -57,7 +59,7 @@ router.post("/tambah", async (req, res, next) => {
 
 });
 
-router.put("/stok/:id_keranjang", async (req, res, next) => {
+router.put("/stok/:id_keranjang",verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("keranjang").where('id_keranjang', req.params.id_keranjang).first();
         if (result) {
@@ -85,7 +87,7 @@ router.put("/stok/:id_keranjang", async (req, res, next) => {
 });
 
 
-router.post("/transaksi", async (req, res, next) => {
+router.post("/transaksi", validasi_data.data, verfikasi_validasi_data, async (req, res, next) => {
     const data = req.body;
     const today = moment().format('DDMMYYYY');
     try {
@@ -133,7 +135,7 @@ router.post("/transaksi", async (req, res, next) => {
 
 });
 
-router.delete("/hapus/all/:id_user", async (req, res, next) => {
+router.delete("/hapus/all/:id_user", verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("keranjang").where('id_user', req.params.id_user);
         if (result.length > 0) {
@@ -157,7 +159,7 @@ router.delete("/hapus/all/:id_user", async (req, res, next) => {
 
 });
 
-router.delete("/hapus/one/:id_keranjang", async (req, res, next) => {
+router.delete("/hapus/one/:id_keranjang",verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("keranjang").where('id_keranjang', req.params.id_keranjang).first();
         if (result) {
