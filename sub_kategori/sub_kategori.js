@@ -23,7 +23,7 @@ router.get('/all/:id_kategori',verfikasi_token, async (req, res, next) => {
     }
 });
 
-router.get('/:id_sub_kategori',verfikasi_token, async (req, res, next) => {
+router.get('/one/:id_sub_kategori',verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("sub_kategori").where('id_sub_kategori', req.params.id_sub_kategori).first();
         return res.status(200).json({

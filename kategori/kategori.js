@@ -23,6 +23,22 @@ router.get('/all',verfikasi_token, async (req, res, next) => {
     }
 });
 
+router.get('/one/:id_kategori',verfikasi_token, async (req, res, next) => {
+    try {
+        const result = await database.select("*").from("kategori").where('id_kategori',req.params.id_kategori);
+        return res.status(200).json({
+            status: 1,
+            message: "Berhasil",
+            result: result
+        })
+    } catch (error) {
+        return res.status(500).json({
+            status: 0,
+            message: error.message
+        })
+    }
+});
+
 router.get('/:nama',verfikasi_token, async (req, res, next) => {
     try {
         const result = await database.select("*").from("kategori").where('nama', 'like', '%' + req.params.nama + '%');
